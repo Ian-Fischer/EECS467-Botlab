@@ -39,16 +39,17 @@ command_init = 0
 timesync_data = np.empty((0, 1), dtype=int)
 
 for event in log:
-    if event.channel == "MBOT_ODOMETRY":
+    if event.channel == "ODOMETRY":
+        print("FUBN")
         odom_msg = odometry_t.decode(event.data)
         if odom_init == 0:
             odom_start_time = odom_msg.utime
             odom_init = 1
         
-        odom_data.append([odom_msg.x,
+        odom_data.append(np.array([odom_msg.x,
                           odom_msg.y,
                           odom_msg.theta,
-                          odom_msg.utime - odom_start_time])
+                          odom_msg.utime - odom_start_time]))
             
     if event.channel == "MBOT_ENCODERS":
         encoder_msg = mbot_encoder_t.decode(event.data)
@@ -60,7 +61,7 @@ for event in log:
             (encoder_msg.utime - enc_start_utime)/1.0E6,
             encoder_msg.leftticks,
             encoder_msg.rightticks,
-            encoder_msg.left_delta,ODOMETRY
+            encoder_msg.left_delta,
             encoder_msg.right_delta
         ]]), axis=0)
 
@@ -82,6 +83,7 @@ for event in log:
             (timesync_msg.utime)/1.0E6,
         ]]), axis=0)
 
+print(odom_data)
 odom_data = np.vstack(odom_data)
 xs = odom_data[:, 0]
 ys = odom_data[:, 1]
