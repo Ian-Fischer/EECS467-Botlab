@@ -5,7 +5,7 @@ import time
 
 lc = lcm.LCM("udpm://239.255.76.67:7667?ttl=1")
 
-DRIVE_LENGTH = 1
+DRIVE_LENGTH = 4#1
 STOP_LENGTH = 0.2
 ROTATE_LENGTH = 1
 
