@@ -1,0 +1,6 @@
+python3 send_pid_params.py
+log_name=logs/$(date +'%d_%H-%M-%S')
+lcm-logger $log_name &
+python3 step_test.py
+kill $!
+python3 plot_step.py $log_name
