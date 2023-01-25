@@ -5,7 +5,7 @@ import lcm
 import matplotlib.pyplot as plt
 import numpy as np
 
-from lcmtypes import mbot_encoder_t, mbot_motor_command_t, timestamp_t
+from lcmtypes import mbot_encoder_t, mbot_motor_command_t, timestamp_t, mbot_imu_t
 
 
 def is_between(a, b, c):
@@ -33,6 +33,9 @@ encoder_init = 0
 command_data = np.empty((0, 3), dtype=float)
 command_init = 0
 
+imu_data = np.empty((0, 2), dtype=float)
+imu_init = 0
+
 timesync_data = np.empty((0, 1), dtype=int)
 
 for event in log:
@@ -49,6 +52,7 @@ for event in log:
             encoder_msg.left_delta,
             encoder_msg.right_delta
         ]]), axis=0)
+        #print(encoder_msg.error_l)
 
     if event.channel == "MBOT_MOTOR_COMMAND":
         command_msg = mbot_motor_command_t.decode(event.data)
@@ -68,6 +72,17 @@ for event in log:
             (timesync_msg.utime)/1.0E6,
         ]]), axis=0)
 
+    if event.channel == "MBOT_IMU":
+        imu_msg = mbot_imu_t.decode(event.data)
+        if imu_init == 0:
+            imu_start_utime = imu_msg.utime
+            print("enc_start_utime: {}".format(imu_start_utime))
+            imu_init = 1
+        imu_data = np.append(imu_data, np.array([[
+            (imu_msg.utime - imu_start_utime)/1.0E6,
+            imu_msg.temp
+        ]]), axis=0)
+        print(imu_msg.temp)
 
 # Encoder data
 enc_time = encoder_data[:, 0]
@@ -133,6 +148,8 @@ axs[0].legend()
 axs[0].set_xlabel("Time (s)")
 axs[0].set_ylabel("Velocity (m/s)")
 axs[0].set_title("Left Wheel")
+
+axs[0].plot(imu_data[:,0], imu_data[:, 1])
 
 # Right wheel
 axs[1].plot(enc_time[1:], right_measured_vel, 'b', label="Measured Velocity")
