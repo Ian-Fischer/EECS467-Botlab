@@ -15,9 +15,9 @@ def current_utime(): return int(time.time() * 1e6)
 # Drive forward
 drive = mbot_motor_command_t()
 drive.utime = current_utime()
-drive.trans_v = 0.25
+drive.trans_v = 0.0
 #drive.trans_v = 0.0
-drive.angular_v = 0.0#-3.1415/2
+drive.angular_v = -3.1415/2
 
 drive_time = timestamp_t()
 drive_time.utime = drive.utime
