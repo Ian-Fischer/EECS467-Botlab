@@ -18,6 +18,7 @@
 #include <signal.h>
 #include "maneuver_controller.h"
 
+#include <unistd.h>
 
 class StraightManeuverController : public ManeuverControllerBase
 {
@@ -341,8 +342,13 @@ int main(int argc, char** argv)
     lcm::LCM lcmInstance(MULTICAST_URL);
 
     // reset odometry
+    //
+    lcmInstance.handleTimeout(50);  // update at 20Hz minimum
     reset_odometry_t reset {0, 0, 0};
-    lcmInstance.publish("RESET_ODOMETRY", &reset);
+    for(int i = 0; i < 10; i++) {
+	    lcmInstance.publish("RESET_ODOMETRY", &reset);
+    }
+    sleep(2); 
 
     MotionController controller(&lcmInstance);
 

@@ -89,7 +89,7 @@ xs = odom_data[:, 0]
 ys = odom_data[:, 1]
 
 fig = plt.plot(xs - 0.1, ys -0.4, "b-", label="odom")
-plt.plot([0, -1, -1, 0, 0], [0, 0, -1, -1, 0], "r", label="ground truth")
+#plt.plot([0, -1, -1, 0, 0], [0, 0, -1, -1, 0], "r", label="ground truth")
 plt.legend()
 plt.xlabel("X (meters)")
 plt.ylabel("Y (meters)")
