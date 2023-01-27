@@ -31,8 +31,8 @@ private:
     *  - Week 4: Secion 3.2
     *      - Tune PID parameters for forward and turning during DRIVE state
     *************************************************************/
-    float fwd_pid[3] = {1.0, 0, 0};
-    float turn_pid[3] = {1.0, 0, 0};
+    float fwd_pid[3] = {1.5, 0, 0};
+    float turn_pid[3] = {3.0, 0, 0};
     /*************************************************************
     * End of TODO
     *************************************************************/
@@ -82,7 +82,7 @@ private:
     * TODO:
     *      - Tune PID parameters for turning during TURN state
     *************************************************************/
-    float turn_pid[3] = {1.0, 0, 0};
+    float turn_pid[3] = {10.0, 0, 0};
     /*************************************************************
     * End of TODO
     *************************************************************/
@@ -102,7 +102,7 @@ public:
             turn_der = (d_theta - turn_last_error) / 0.05;
         
         float turn_vel = turn_pid[0] * d_theta + turn_pid[1] * turn_sum_error + turn_pid[2] * turn_der;
-        // fprintf(stdout,"Turn error: %f\tTurn vel: %f\tPose theta: %f\n", d_theta, turn_vel, pose.theta);
+        fprintf(stdout,"Turn error: %f\tTurn vel: %f\tPose theta: %f p%f\n", d_theta, turn_vel, pose.theta, turn_pid[0]);
 
         return {0, 0, turn_vel};
     }
@@ -127,12 +127,12 @@ public:
         float dy = target.y - pose.y;
         float target_heading = atan2(dy, dx);
         // Handle the case when the target is on the same x,y but on a different theta
-        return (fabs(angle_diff(pose.theta, target_heading)) < 0.05);
+        return (fabs(angle_diff(pose.theta, target_heading)) < 0.02);
     }
     bool target_reached_final_turn(const pose_xyt_t& pose, const pose_xyt_t& target)
     {
         // Handle the case when the target is on the same x,y but on a different theta
-        return (fabs(angle_diff(target.theta, pose.theta)) < 0.05);
+        return (fabs(angle_diff(target.theta, pose.theta)) < 0.02);
     }
 
 };

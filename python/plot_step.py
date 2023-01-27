@@ -149,7 +149,7 @@ axs[0].set_xlabel("Time (s)")
 axs[0].set_ylabel("Velocity (m/s)")
 axs[0].set_title("Left Wheel")
 
-axs[0].plot(imu_data[:,0], imu_data[:, 1])
+#axs[0].plot(imu_data[:,0], imu_data[:, 1])
 
 # Right wheel
 axs[1].plot(enc_time[1:], right_measured_vel, 'b', label="Measured Velocity")
