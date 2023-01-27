@@ -13,19 +13,6 @@ from threading import Thread
 from lcmtypes import odometry_t
 
 
-lc = lcm.LCM("udpm://239.255.76.67:7667?ttl=1")
-robot_pos = np.array([0, 0]) 
-robot_theta = np.pi/2
-history = deque([], maxlen=1000)
-def odom_handler(channel, data):
-    global robot_pos, robot_theta
-    msg = odometry_t.decode(data)
-    #print("got encoder message: %d %d" % (msg.x, msg.y))
-    robot_pos = np.array([msg.x , msg.y])
-    robot_theta = msg.theta
-    history.append(robot_pos)
-    #print(robot_pos)
-    #print(robot_theta)
 
 #dataclass
 class Sim:
@@ -37,6 +24,24 @@ class Sim:
     robot_size: np.ndarray = np.array([0.1, 0.1])
     drawables: Union[List[Callable[[Sim], Any]], None] = None
     state_history: List[np.ndarray] = []
+
+    lc = lcm.LCM("udpm://239.255.76.67:7667?ttl=1")
+    robot_pos = np.array([0, 0]) 
+    robot_theta = np.pi/2
+    history = deque([], maxlen=10000)
+
+    def handle_lcm(self):
+        while(True):
+            self.lc.handle()
+
+    def odom_handler(self, channel, data):
+        msg = odometry_t.decode(data)
+        self.robot_pos = np.array([msg.x , msg.y])
+        self.robot_theta = msg.theta
+        #if(len(self.history) == 0):
+        self.history.append(self.world_to_screen_pos(self.robot_pos))
+        #if(len(self.history) > 0 and np.allclose(self.history[-1], self.world_to_screen_pos(self.robot_pos))):
+        #    self.history.append(self.world_to_screen_pos(self.robot_pos))
 
     def world_to_screen_pos(self, world_pos: np.ndarray) -> np.ndarray:
         """
@@ -59,15 +64,15 @@ class Sim:
     def draw(self) -> None:
         # Blank background
         self.screen.fill((0, 0, 0))
-
-        pygame.draw.lines(self.screen, (255, 0, 0), False, list(history))
+        if(len(self.history) > 1):
+            pygame.draw.lines(self.screen, (255, 0, 0), False, list(self.history))
         # Display the robot
         #robot_pos, robot_theta = robot.get_drawable()
         robot_sprite = pygame.transform.rotate(
-            self.robot_sprite, np.rad2deg(robot_theta)
+            self.robot_sprite, np.rad2deg(self.robot_theta)
         )
         hitbox = robot_sprite.get_rect(
-            center=tuple(self.world_to_screen_pos(robot_pos))
+            center=tuple(self.world_to_screen_pos(self.robot_pos))
         )
         self.screen.blit(robot_sprite, hitbox)
 
@@ -106,16 +111,13 @@ class Sim:
 
         pygame.quit()
 
-def handle_lcm(lcm_obj):
-    while(True):
-        lcm_obj.handle()
 
 
 if __name__ == "__main__":
 
     sim = Sim()
-    sub = lc.subscribe("ODOMETRY", odom_handler)
-    lcm_kill_thread = Thread(target = handle_lcm, args= (lc, ), daemon = True)
+    sub = sim.lc.subscribe("ODOMETRY", sim.odom_handler)
+    lcm_kill_thread = Thread(target = sim.handle_lcm, daemon = True)
     lcm_kill_thread.start()
     sim.run()
 
