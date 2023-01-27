@@ -6,6 +6,7 @@
 #include <lcmtypes/robot_path_t.hpp>
 #include <lcmtypes/timestamp_t.hpp>
 #include <lcmtypes/message_received_t.hpp>
+#include <lcmtypes/reset_odometry_t.hpp>
 #include <common/angle_functions.hpp>
 #include <common/pose_trace.hpp>
 #include <common/lcm_config.h>
@@ -338,6 +339,11 @@ private:
 int main(int argc, char** argv)
 {
     lcm::LCM lcmInstance(MULTICAST_URL);
+
+    // reset odometry
+    reset_odometry_t reset {0, 0, 0};
+    lcmInstance.publish("RESET_ODOMETRY", &reset);
+
     MotionController controller(&lcmInstance);
 
     signal(SIGINT, exit);
