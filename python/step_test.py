@@ -5,7 +5,7 @@ import time
 
 lc = lcm.LCM("udpm://239.255.76.67:7667?ttl=1")
 
-DRIVE_LENGTH = 1#4#1
+DRIVE_LENGTH = 2#4#1
 STOP_LENGTH = 0.2
 ROTATE_LENGTH = 1
 
@@ -15,7 +15,7 @@ def current_utime(): return int(time.time() * 1e6)
 # Drive forward
 drive = mbot_motor_command_t()
 drive.utime = current_utime()
-drive.trans_v = 0.25
+drive.trans_v = 0.25 #0.25
 #drive.trans_v = 0.0
 drive.angular_v = 0.0#-3.1415/2
 

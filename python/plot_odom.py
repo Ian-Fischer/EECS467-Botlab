@@ -40,7 +40,6 @@ timesync_data = np.empty((0, 1), dtype=int)
 
 for event in log:
     if event.channel == "ODOMETRY":
-        print("FUBN")
         odom_msg = odometry_t.decode(event.data)
         if odom_init == 0:
             odom_start_time = odom_msg.utime
@@ -83,93 +82,33 @@ for event in log:
             (timesync_msg.utime)/1.0E6,
         ]]), axis=0)
 
-print(odom_data)
 odom_data = np.vstack(odom_data)
-xs = odom_data[:, 0]
-ys = odom_data[:, 1]
 
-fig = plt.plot(xs - 0.1, ys -0.4, "b-", label="odom")
-#plt.plot([0, -1, -1, 0, 0], [0, 0, -1, -1, 0], "r", label="ground truth")
-plt.legend()
-plt.xlabel("X (meters)")
-plt.ylabel("Y (meters)")
-plt.show()
+def plot_xy(odom_data):
+    xs = odom_data[:, 0]
+    ys = odom_data[:, 1]
+    fig = plt.plot(xs - 0.1, ys -0.4, "b-", label="odom")
+    #plt.plot([0, -1, -1, 0, 0], [0, 0, -1, -1, 0], "r", label="ground truth")
+    plt.legend()
+    plt.xlabel("X (meters)")
+    plt.ylabel("Y (meters)")
+    plt.show()
+
+def plot_xt(odom_data):
+    xs = odom_data[:, 0]
+    ys = odom_data[:, 1]
+    plt.plot(np.arange(xs.size), xs, "b-")
+    plt.xlabel("time (seconds)")
+    plt.ylabel("X (meters)")
+    plt.show()
+
+def plot_theta_t(odom_data):
+    thetas = odom_data[:, 2]
+    plt.plot(np.arange(thetas.size), thetas, "r-")
+    plt.xlabel("time (seconds)")
+    plt.ylabel("Heading (radians)")
+    plt.show()
+
+plot_theta_t(odom_data)
 
 
-# Encoder data
-# enc_time = encoder_data[:, 0]
-# enc_time_diff = np.diff(enc_time)
-# leftticks = encoder_data[:, 1]
-# rightticks = encoder_data[:, 2]
-# left_delta = encoder_data[:, 3]
-# right_delta = encoder_data[:, 4]
-
-# # Compute the wheel velocities from encoders
-# left_measured_vel = np.diff(leftticks) * enc2meters / enc_time_diff
-# right_measured_vel = np.diff(rightticks) * enc2meters / enc_time_diff
-
-# # print(timesync_data[0, 0], timesync_data[1, 0])
-
-# # Wheel command data
-# cmd_time = command_data[:, 0]
-# # print(cmd_time[0] , cmd_time[1])
-# trans_v = command_data[:, 1]
-# angular_v = command_data[:, 2]
-# left_setpoint_vel = trans_v - WHEEL_BASE * angular_v / 2
-# right_setpoint_vel = trans_v + WHEEL_BASE * angular_v / 2
-# left_setpoint_vel = np.insert(left_setpoint_vel, 0, 0)
-# right_setpoint_vel = np.insert(right_setpoint_vel, 0, 0)
-
-# # Repeat each item in the setpoint lists twice in a numpy array
-# left_setpoint_vel = np.repeat(left_setpoint_vel, 2)
-# right_setpoint_vel = np.repeat(right_setpoint_vel, 2)
-
-# # Move the command points to the frst time where the encoders change
-# # possible issue as this is not a great solution
-# first_enc_change_left = np.where(left_delta != 0)[0][0]
-# first_enc_change_right = np.where(right_delta != 0)[0][0]
-
-# i = 1
-# while first_enc_change_left != first_enc_change_right:
-#     first_enc_change_left = np.where(left_delta != 0)[0][i]
-#     first_enc_change_right = np.where(right_delta != 0)[0][i]
-#     i += 1
-
-# # Start forming the command lines
-# left_cmd_times = cmd_time + enc_time[first_enc_change_left]
-# right_cmd_times = cmd_time + enc_time[first_enc_change_right]
-# left_cmd_times = np.repeat(left_cmd_times, 2)
-# right_cmd_times = np.repeat(right_cmd_times, 2)
-
-# # Add a value to the beginning of the command lines to make them start at the same time
-# left_cmd_times_ = np.ones((left_cmd_times.shape[0] + 2)) * enc_time[1]
-# right_cmd_times_ = np.ones((right_cmd_times.shape[0] + 2)) * enc_time[1]
-# left_cmd_times_[1:-1] = left_cmd_times
-# right_cmd_times_[1:-1] = right_cmd_times
-# left_cmd_times_[-1] = enc_time[-1]
-# right_cmd_times_[-1] = enc_time[-1]
-
-# # Plot everything
-# fig, axs = plt.subplots(1, 2, sharey=True, figsize=(10, 10))
-
-# # Left wheel
-# axs[0].plot(enc_time[1:], left_measured_vel, 'b', label="Measured Velocity")
-# axs[0].plot(left_cmd_times_, left_setpoint_vel,
-#                c='r', label="Target Velocity")
-# axs[0].legend()
-# axs[0].set_xlabel("Time (s)")
-# axs[0].set_ylabel("Velocity (m/s)")
-# axs[0].set_title("Left Wheel")
-
-# # Right wheel
-# axs[1].plot(enc_time[1:], right_measured_vel, 'b', label="Measured Velocity")
-# axs[1].plot(right_cmd_times_, right_setpoint_vel,
-#                c='r', label="Target Velocity")
-# axs[1].legend()
-# axs[1].set_xlabel("Time (s)")
-# axs[1].set_ylabel("Velocity (m/s)")
-# axs[1].set_title("Right Wheel")
-
-# plt.savefig(f"{file}.png")
-
-# plt.show()
