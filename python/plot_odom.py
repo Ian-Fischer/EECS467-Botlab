@@ -109,6 +109,7 @@ def plot_theta_t(odom_data):
     plt.ylabel("Heading (radians)")
     plt.show()
 
-plot_theta_t(odom_data)
+#plot_theta_t(odom_data)
+plot_xy(odom_data)
 
 

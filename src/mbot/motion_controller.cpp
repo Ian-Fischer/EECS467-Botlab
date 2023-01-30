@@ -257,6 +257,17 @@ public:
     
     void handleOdometry(const lcm::ReceiveBuffer* buf, const std::string& channel, const odometry_t* odometry)
     {
+        // if (!odom_initialized) {
+        //     odom_zero_offset = *odometry;
+        //     odom_initialized = true;
+        //     std::cout << "odometry zeroed\n";
+        // }
+    
+        // float x_zerod = odometry->x - odom_zero_offset.x;
+        // float y_zerod = odometry->y - odom_zero_offset.y;
+        // float theta_zerod = odometry->theta - odom_zero_offset.theta;
+        // std::cout << "zerod odom: {x=" << x_zerod << ", y=" << y_zerod << ", theta=" << theta_zerod << "}\n";
+        // pose_xyt_t pose {odometry->utime, x_zerod, y_zerod, theta_zerod};
         pose_xyt_t pose {odometry->utime, odometry->x, odometry->y, odometry->theta};
         odomTrace_.addPose(pose);
     }
@@ -288,6 +299,9 @@ private:
  
     TurnManeuverController turn_controller;
     StraightManeuverController straight_controller;
+
+    // odometry_t odom_zero_offset;
+    // bool odom_initialized = false;
 
     int64_t now()
     {
@@ -368,12 +382,12 @@ int main(int argc, char** argv)
 
                 // Limit command values
                 // Fwd vel
-                float max_fwd_vel = 0.3;
+                float max_fwd_vel = 0.2;//0.3;//0.3;
                 if (cmd.trans_v > max_fwd_vel) cmd.trans_v = max_fwd_vel;
                 else if (cmd.trans_v < -max_fwd_vel) cmd.trans_v = -max_fwd_vel;
 
                 // Angular vel
-                float max_ang_vel = M_PI * 2.0 / 3.0;
+                float max_ang_vel = M_PI * 1.0/4.0;//2.0 / 3.0;
                 if (cmd.angular_v > max_ang_vel) cmd.angular_v = max_ang_vel;
                 else if (cmd.angular_v < -max_ang_vel) cmd.angular_v = -max_ang_vel;
                 
