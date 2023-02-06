@@ -21,27 +21,18 @@ void Mapping::updateMap(const lidar_t& scan, const pose_xyt_t& pose, OccupancyGr
 {
     //////////////// TODO: Implement your occupancy grid algorithm here ///////////////////////
     
-    //prevPose_ = pose_xyt_t();
-    //prevPose_.utime = utime_now();//12312;
-    /*
     if(!initialized_) {
-        //prevPose_ = pose;
-        prevPose_.utime = 12312;
-
-        //std::cout << pee.utime << std::endl;
-        /*
-        //return;
+        prevPose_ = pose;
     }
     MovingLaserScan movingScan(scan, prevPose_, pose);
 
     for(auto& ray : movingScan) {
         scoreEndpoint(ray, map);
-        scoreRay(ray, map);
+        //scoreRay(ray, map);
     }
 
     initialized_ = true;
     prevPose_ = pose;
-    */
 
     initialized_ = true;
 }
