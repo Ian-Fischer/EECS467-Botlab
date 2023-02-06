@@ -1,0 +1,2 @@
+#!/bin/bash
+sudo apt install libgsl-dev libgtk2.0-dev
