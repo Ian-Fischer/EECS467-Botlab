@@ -15,6 +15,17 @@ ParticleFilter::ParticleFilter(int numParticles)
 void ParticleFilter::initializeFilterAtPose(const pose_xyt_t& pose)
 {
     ///////////// TODO: Implement your method for initializing the particles in the particle filter /////////////////
+    double sampleWeight = 1.0/kNumParticles_;
+
+    posteriorPose_ = pose;
+    for(auto &&p : posterior_) {
+        p.pose.x = pose.x;
+        p.pose.y = pose.y;
+        p.pose.theta = pose.theta;
+        p.pose.utime = pose.utime;
+        p.parent_pose = p.pose;
+        p.weight = sampleWeight;
+    }
 }
 
 
@@ -87,6 +98,11 @@ std::vector<particle_t> ParticleFilter::computeProposalDistribution(const std::v
 {
     //////////// TODO: Implement your algorithm for creating the proposal distribution by sampling from the ActionModel
     std::vector<particle_t> proposal;
+
+    for( auto& p : prior) {
+        proposal.push_back(actionModel_.applyAction(p));
+    }
+
     return proposal;
 }
 
