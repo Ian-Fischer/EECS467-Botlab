@@ -25,7 +25,7 @@ void Mapping::updateMap(const lidar_t& scan, const pose_xyt_t& pose, OccupancyGr
         prevPose_ = pose;
     }
     MovingLaserScan movingScan(scan, prevPose_, pose);
-
+    
     for(auto& ray : movingScan) {
         scoreEndpoint(ray, map);
         scoreRay(ray, map);
@@ -33,8 +33,6 @@ void Mapping::updateMap(const lidar_t& scan, const pose_xyt_t& pose, OccupancyGr
 
     initialized_ = true;
     prevPose_ = pose;
-
-    initialized_ = true;
 }
 
 void Mapping::scoreEndpoint(const adjusted_ray_t &ray, OccupancyGrid& map) {
@@ -50,7 +48,7 @@ void Mapping::scoreEndpoint(const adjusted_ray_t &ray, OccupancyGrid& map) {
     }
 }
 void Mapping::scoreRay(const adjusted_ray_t &ray, OccupancyGrid& map) {
-    
+    //if(initialized_) return; 
     
     bool maxDist = false;
     Point<int> rayCell;
@@ -70,8 +68,8 @@ void Mapping::scoreRay(const adjusted_ray_t &ray, OccupancyGrid& map) {
     int y1 = rayCell.y;
     int dx = abs(x1 - x0);
     int dy = abs(y1 - y0);
-    int sx = x0 < x1 ? 1 : -1;
-    int sy = y0 < y1 ? 1 : -1;
+    int sx = (x0 < x1) ? 1 : -1;
+    int sy = (y0 < y1) ? 1 : -1;
     int err = dx - dy;
     int x = x0;
     int y = y0;
