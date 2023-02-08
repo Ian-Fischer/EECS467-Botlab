@@ -36,7 +36,7 @@ void Mapping::updateMap(const lidar_t& scan, const pose_xyt_t& pose, OccupancyGr
 }
 
 void Mapping::scoreEndpoint(const adjusted_ray_t &ray, OccupancyGrid& map) {
-    if(ray.range <= kMaxLaserDistance_) {
+    if(ray.range < kMaxLaserDistance_) {
         Point<float> rayStart = global_position_to_grid_cell(ray.origin, map);
         Point<int> rayCell;
         rayCell.x = static_cast<int> (ray.range * std::cos(ray.theta) * map.cellsPerMeter() + rayStart.x);
@@ -53,7 +53,7 @@ void Mapping::scoreRay(const adjusted_ray_t &ray, OccupancyGrid& map) {
     bool maxDist = false;
     Point<int> rayCell;
     Point<float> rayStart = global_position_to_grid_cell(ray.origin, map);
-    if(ray.range <= kMaxLaserDistance_) {
+    if(ray.range < kMaxLaserDistance_) {
         rayCell.x = static_cast<int> (ray.range * std::cos(ray.theta) * map.cellsPerMeter() + rayStart.x);
         rayCell.y = static_cast<int> (ray.range * std::sin(ray.theta) * map.cellsPerMeter() + rayStart.y);
     }
@@ -73,21 +73,19 @@ void Mapping::scoreRay(const adjusted_ray_t &ray, OccupancyGrid& map) {
     int err = dx - dy;
     int x = x0;
     int y = y0;
-
-    while (x != x1 || y != y1) {
-        decreaseCellOdds(x, y, map);
-        int e2 = 2 * err;
-        if (e2 >= -dy) {
-            err -= dy;
-            x += sx;
+    if (!maxDist) {
+        while (x != x1 || y != y1) {
+            decreaseCellOdds(x, y, map);
+            int e2 = 2 * err;
+            if (e2 >= -dy) {
+                err -= dy;
+                x += sx;
+            }
+            if (e2 <= dx) {
+                err += dx;
+                y += sy;
+            }
         }
-        if (e2 <= dx) {
-            err += dx;
-            y += sy;
-        }
-    }
-    if (maxDist) {
-        decreaseCellOdds(x, y, map);
     }
 
     
