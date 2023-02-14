@@ -1,8 +1,10 @@
+#include <cmath>
 #include <random>
 #include <slam/particle_filter.hpp>
 #include <slam/occupancy_grid.hpp>
 #include <lcmtypes/pose_xyt_t.hpp>
 #include <cassert>
+#include <chrono>
 
 
 ParticleFilter::ParticleFilter(int numParticles)
@@ -36,6 +38,9 @@ pose_xyt_t ParticleFilter::updateFilter(const pose_xyt_t&      odometry,
 {
     // Only update the particles if motion was detected. If the robot didn't move, then
     // obviously don't do anything.
+
+std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
+
     bool hasRobotMoved = actionModel_.updateAction(odometry);
     
     if(hasRobotMoved)
@@ -44,9 +49,20 @@ pose_xyt_t ParticleFilter::updateFilter(const pose_xyt_t&      odometry,
         auto proposal = computeProposalDistribution(prior);
         posterior_ = computeNormalizedPosterior(proposal, laser, map);
         posteriorPose_ = estimatePosteriorPose(posterior_);
+
+        float dx = (odometry.x - posteriorPose_.x) * (odometry.x - posteriorPose_.x);
+        float dy = (odometry.y - posteriorPose_.y) * (odometry.y - posteriorPose_.y);
+        float dtheta = fabs(odometry.theta - posteriorPose_.theta);
+        //while(dtheta > M_PI) dtheta -= M_PI;
+        //std::cout << odometry.utime << "," << sqrt(dx + dy) << std::endl;
+        //std::cout << odometry.utime << "," << dtheta << std::endl;
+
+        std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
+        std::cout << "Time difference = " << std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count() << "[ms]" << std::endl;
     }
     
     posteriorPose_.utime = odometry.utime;
+
     
     return posteriorPose_;
 }
@@ -89,7 +105,6 @@ particles_t ParticleFilter::particles(void) const
 std::vector<particle_t> ParticleFilter::resamplePosteriorDistribution(void)
 {
     //////////// TODO: Implement your algorithm for resampling from the posterior distribution ///////////////////
-    /*
     std::vector<particle_t> prior = posterior_;
     double sampleWeight = 1.0/kNumParticles_;
     std::random_device rd;
@@ -105,7 +120,7 @@ std::vector<particle_t> ParticleFilter::resamplePosteriorDistribution(void)
         p.parent_pose = posteriorPose_;
         p.weight = sampleWeight;
     }
-    */
+    /*
     std::vector<particle_t> prior = posterior_;
     double sampleWeight = 1.0/kNumParticles_;
     float r = static_cast <float> (rand()) / (static_cast <float> (RAND_MAX/sampleWeight));
@@ -127,6 +142,7 @@ std::vector<particle_t> ParticleFilter::resamplePosteriorDistribution(void)
         p.parent_pose = posterior_[i].parent_pose;
         p.weight = sampleWeight;
     }
+    */
 
     return prior;
 }
