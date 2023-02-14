@@ -89,7 +89,7 @@ particles_t ParticleFilter::particles(void) const
 std::vector<particle_t> ParticleFilter::resamplePosteriorDistribution(void)
 {
     //////////// TODO: Implement your algorithm for resampling from the posterior distribution ///////////////////
-    /* 
+    /*
     std::vector<particle_t> prior = posterior_;
     double sampleWeight = 1.0/kNumParticles_;
     std::random_device rd;
@@ -106,7 +106,6 @@ std::vector<particle_t> ParticleFilter::resamplePosteriorDistribution(void)
         p.weight = sampleWeight;
     }
     */
-
     std::vector<particle_t> prior = posterior_;
     double sampleWeight = 1.0/kNumParticles_;
     float r = static_cast <float> (rand()) / (static_cast <float> (RAND_MAX/sampleWeight));
