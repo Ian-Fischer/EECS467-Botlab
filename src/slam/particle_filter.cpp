@@ -193,15 +193,28 @@ pose_xyt_t ParticleFilter::estimatePosteriorPose(const std::vector<particle_t>& 
     double cosThetaMean = 0.0;
     double sinThetaMean = 0.0;
 
+    // mean
     for(auto &p : posterior) {
         xMean += p.weight * p.pose.x;
         yMean += p.weight * p.pose.y;
         cosThetaMean += p.weight * std::cos(p.pose.theta);
         sinThetaMean += p.weight * std::sin(p.pose.theta);
     }    
+
     pose.x = xMean;
     pose.y = yMean;
     pose.theta = std::atan2(sinThetaMean, cosThetaMean);
+
+    // MAP
+    /*
+    particle_t map_particle = posterior[0]; 
+    for(auto &p : posterior) {
+        if(p.weight > map_particle.weight) 
+            map_particle = p;
+    }
+    pose = map_particle.pose;
+    */
+    // top k mean
 
     return pose;
 }
