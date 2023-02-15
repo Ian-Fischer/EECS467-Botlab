@@ -8,8 +8,8 @@
 
 
 ActionModel::ActionModel(void) 
-: k1_(0.01f)
-, k2_(0.01f)
+: k1_(0.001f)
+, k2_(0.001f)
 , initialized_(false)
 {
     //////////////// TODO: Handle any initialization for your ActionModel /////////////////////////

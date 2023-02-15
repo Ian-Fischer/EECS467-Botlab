@@ -5,6 +5,7 @@
 #include <lcmtypes/pose_xyt_t.hpp>
 #include <cassert>
 #include <chrono>
+#include <algorithm>
 
 
 ParticleFilter::ParticleFilter(int numParticles)
@@ -121,7 +122,7 @@ std::vector<particle_t> ParticleFilter::resamplePosteriorDistribution(void)
         p.parent_pose = posteriorPose_;
         p.weight = sampleWeight;
     }
-*/
+    */
     std::vector<particle_t> prior = posterior_;
     double sampleWeight = 1.0/kNumParticles_;
     float r = static_cast <float> (rand()) / (static_cast <float> (RAND_MAX/sampleWeight));
@@ -143,6 +144,11 @@ std::vector<particle_t> ParticleFilter::resamplePosteriorDistribution(void)
         p.parent_pose = posterior_[i].parent_pose;
         p.weight = sampleWeight;
     }
+    /*
+    std::vector<particle_t> prior = posterior_;
+    std::sort(prior.begin(), prior.end(), [] (particle_t &a, particle_t &b) { return a.weight > b. weight; } );
+    */
+    //for(int i = 0; i <)
 
     return prior;
 }
@@ -193,6 +199,7 @@ pose_xyt_t ParticleFilter::estimatePosteriorPose(const std::vector<particle_t>& 
     double cosThetaMean = 0.0;
     double sinThetaMean = 0.0;
 
+    /*
     // mean
     for(auto &p : posterior) {
         xMean += p.weight * p.pose.x;
@@ -204,7 +211,7 @@ pose_xyt_t ParticleFilter::estimatePosteriorPose(const std::vector<particle_t>& 
     pose.x = xMean;
     pose.y = yMean;
     pose.theta = std::atan2(sinThetaMean, cosThetaMean);
-
+*/
     // MAP
     /*
     particle_t map_particle = posterior[0]; 
@@ -215,6 +222,21 @@ pose_xyt_t ParticleFilter::estimatePosteriorPose(const std::vector<particle_t>& 
     pose = map_particle.pose;
     */
     // top k mean
+    std::vector<particle_t> sorted_particles = posterior_;
+    std::sort(sorted_particles.begin(), sorted_particles.end(), 
+        [] (particle_t &a, particle_t &b) { return a.weight > b. weight; } );
+    float sumWeight = 0.0;
+    for(size_t i = 0; i < static_cast<size_t>(kNumParticles_ * 0.1); i++) {
+        auto &p = sorted_particles[i];
+        xMean += p.weight * p.pose.x;
+        yMean += p.weight * p.pose.y;
+        cosThetaMean += p.weight * std::cos(p.pose.theta);
+        sinThetaMean += p.weight * std::sin(p.pose.theta);
+        sumWeight += p.weight;
+    }
+    pose.x = xMean / sumWeight;
+    pose.y = yMean / sumWeight;
+    pose.theta = std::atan2(sinThetaMean / sumWeight, cosThetaMean / sumWeight);
 
     return pose;
 }
