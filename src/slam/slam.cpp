@@ -57,6 +57,8 @@ OccupancyGridSLAM::OccupancyGridSLAM(int         numParticles,
     if(mode_ == mapping_only)
     {
         lcm_.subscribe(SLAM_POSE_CHANNEL, &OccupancyGridSLAM::handlePose, this);
+    } else {
+        lcm_.subscribe(TRUE_POSE_CHANNEL, &OccupancyGridSLAM::handlePose, this);
     }
     
     // Zero-out all the poses to start. Either the robot will start at (0,0,0) or at the first pose received from the
@@ -225,6 +227,7 @@ void OccupancyGridSLAM::copyDataForSLAMUpdate(void)
     else
     {
         currentOdometry_ = odometryPoses_.poseAt(currentScan_.times.back());
+        truePose_  = groundTruthPoses_.poseAt(currentScan_.times.back());
     }
 }
 
@@ -259,7 +262,7 @@ void OccupancyGridSLAM::updateLocalization(void)
             currentPose_  = filter_.updateFilterActionOnly(currentOdometry_);
         }
         else{
-            currentPose_  = filter_.updateFilter(currentOdometry_, currentScan_, map_);
+            currentPose_  = filter_.updateFilter(currentOdometry_, currentScan_, map_, &truePose_);
         }
         
         auto particles = filter_.particles();

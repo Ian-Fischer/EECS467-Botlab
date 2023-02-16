@@ -35,10 +35,12 @@ void ParticleFilter::initializeFilterAtPose(const pose_xyt_t& pose)
 
 pose_xyt_t ParticleFilter::updateFilter(const pose_xyt_t&      odometry,
                                         const lidar_t& laser,
-                                        const OccupancyGrid&   map)
+                                        const OccupancyGrid&   map,
+                                        const pose_xyt_t* true_pose 
+                                        )
 {
     // Only update the particles if motion was detected. If the robot didn't move, then
-    // obviously don't do anything.
+    // obviously don't do anythinupdatefilterg.
 
 std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
 
@@ -51,12 +53,19 @@ std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
         posterior_ = computeNormalizedPosterior(proposal, laser, map);
         posteriorPose_ = estimatePosteriorPose(posterior_);
 
-        float dx = (odometry.x - posteriorPose_.x) * (odometry.x - posteriorPose_.x);
-        float dy = (odometry.y - posteriorPose_.y) * (odometry.y - posteriorPose_.y);
-        float dtheta = fabs(odometry.theta - posteriorPose_.theta);
+        //float dx = (odometry.x - posteriorPose_.x) * (odometry.x - posteriorPose_.x);
+        //float dy = (odometry.y - posteriorPose_.y) * (odometry.y - posteriorPose_.y);
+        //float dtheta = fabs(odometry.theta - posteriorPose_.theta);
         //while(dtheta > M_PI) dtheta -= M_PI;
         //std::cout << odometry.utime << "," << sqrt(dx + dy) << std::endl;
         //std::cout << odometry.utime << "," << dtheta << std::endl;
+
+        float dx = (true_pose->x - posteriorPose_.x) * (true_pose->x - posteriorPose_.x);
+        float dy = (true_pose->y - posteriorPose_.y) * (true_pose->y - posteriorPose_.y);
+        float dtheta = fabs(true_pose->theta - posteriorPose_.theta);
+        while(dtheta > M_PI) dtheta -= M_PI;
+        //std::cout << true_pose->utime << "," << sqrt(dx + dy) << std::endl;
+        std::cout << true_pose->utime << "," << dtheta << std::endl;
 
         std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
         //std::cout << "Time difference = " << std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count() << "[ms]" << std::endl;

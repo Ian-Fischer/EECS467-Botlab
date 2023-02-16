@@ -56,7 +56,9 @@ public:
     */
     pose_xyt_t updateFilter(const pose_xyt_t&      odometry,
                             const lidar_t& laser,
-                            const OccupancyGrid&   map);
+                            const OccupancyGrid&   map,
+                            const pose_xyt_t* true_pose=nullptr 
+                            );
 
     /**
     * updateFilterActionOnly increments the state estimated by the particle filter but only applies the action model

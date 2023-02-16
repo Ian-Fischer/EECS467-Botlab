@@ -90,6 +90,7 @@ private:
     pose_xyt_t initialPose_;
     pose_xyt_t previousPose_;
     pose_xyt_t currentPose_;
+    pose_xyt_t truePose_;
     
     ParticleFilter filter_;
     OccupancyGrid map_;
