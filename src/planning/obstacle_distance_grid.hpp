@@ -3,6 +3,20 @@
 
 #include <common/point.hpp>
 #include <vector>
+#include <queue>
+
+typedef Point<int> cell_t;
+
+struct DistanceNode {
+    cell_t cell;
+    float distance;
+
+    bool operator<(const DistanceNode &rhs) const {
+        return distance > rhs.distance;
+    }
+
+    DistanceNode(cell_t cell, float distance) : cell(cell), distance(distance) {}
+};
 
 class OccupancyGrid;
 
@@ -26,6 +40,8 @@ public:
     * The global origin is (0,0).
     */
     ObstacleDistanceGrid(void);
+
+    void initializeDistances(const OccupancyGrid& map);
     
     // Accessors for the properties of the grid
     int   widthInCells (void) const { return width_; }
@@ -88,5 +104,12 @@ private:
     // Allow private write-access to cells
     float& distance(int x, int y) { return cells_[cellIndex(x, y)]; }
 };
+
+void enqueue_obstacle_cells(const OccupancyGrid& map, ObstacleDistanceGrid& grid, std::priority_queue<DistanceNode>& search_queue);
+
+void expand_node(const DistanceNode& node, ObstacleDistanceGrid& grid, std::priority_queue<DistanceNode>& search_queue);
+
+bool is_cell_free(cell_t cell, const OccupancyGrid& map);
+bool is_cell_occupied(cell_t cell, const OccupancyGrid& map);
 
 #endif // PLANNING_OBSTACLE_DISTANCE_GRID_HPP
