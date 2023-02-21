@@ -21,17 +21,18 @@ int main(int argc, char** argv)
     path.path.resize(numTimes * 4);
     
     pose_xyt_t nextPose;
+    float dist = 0.762;
     
-    nextPose.x = 1.0f;
-    nextPose.y = 0.0f;
+    nextPose.x = dist;//1.0f;
+    nextPose.y = 0.0f;//0.0f;
     nextPose.theta = M_PI_2;
     for(int n = 0; n < numTimes; ++n)
     {
         path.path[4*n] = nextPose;
     }
     
-    nextPose.x = 1.0f;
-    nextPose.y = 1.0f;
+    nextPose.x = dist;
+    nextPose.y = dist;
     nextPose.theta = 0;
     for(int n = 0; n < numTimes; ++n)
     {
@@ -39,7 +40,7 @@ int main(int argc, char** argv)
     }
     
     nextPose.x = 0.0f;
-    nextPose.y = 1.0f;
+    nextPose.y = dist;
     nextPose.theta = -M_PI;
     for(int n = 0; n < numTimes; ++n)
     {
