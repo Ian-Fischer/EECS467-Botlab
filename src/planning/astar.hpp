@@ -4,6 +4,69 @@
 #include <lcmtypes/robot_path_t.hpp>
 #include <lcmtypes/pose_xyt_t.hpp>
 
+#include <queue>
+#include <common/grid_utils.hpp>
+#include <planning/obstacle_distance_grid.hpp>
+
+/*
+typedef Point<int> cell;
+
+struct Node {
+    double h_cost;
+    double g_cost;
+    Node* parent;
+    cell_t cell;
+    Node(int a, int b) : h_cost(1.0E16), g_cost(1.0E16), parent(NULL), cell(a, b) {}
+    double f_cost(void) const { return h_cost + g_cost; }
+    bool operator==(const Node& rhs) const {
+        return (cell==rhs.cell);
+    }
+};
+
+struct CompareNode {
+    bool operator() (Node* n1, Node* n2) {
+        if(n1->f_cost() == n2->f_cost()) return n1->h_cost > n2->h_cost;
+        return n1->f_cost() > n2->f_cost();
+    }
+};
+
+struct PriorityQueue {
+    std::priority_queue<Node*, std::vector<Node*>, CompareNode> Q;
+    std::vector<Node*> elements;
+
+    bool empty() {
+        return Q.empty();
+    }
+
+    bool is_member(Node* n) {
+        for(auto &node : elements) {
+            if(*n == *node) return true;
+        }
+        return false;
+    }
+
+    Node* get_member(Node* n) {
+        for(auto &node : elements) {
+            if(*n == *node) return node;
+        }
+        return nullptr;
+    }
+
+    Node* pop() {
+        Node* n = Q.top();
+        Q.pop();
+        int idx = -1;
+        for(unsigned i = 0; i < elements.size(); i++) {
+            if(*elements[i] == *n) { 
+                idx = i; 
+                break;
+            }
+        }
+        elements.erase(elements.begin() + idx);
+        return n;
+    }
+}; */
+
 class ObstacleDistanceGrid;
 
 /**
