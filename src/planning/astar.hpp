@@ -67,6 +67,26 @@ struct PriorityQueue {
     }
 }; */
 
+struct Node {
+    Node(Point<int> cell) : cell(cell) {}
+    Point<int> cell;
+    Node* parent = nullptr;
+    double h_cost = 1e16;
+    double g_cost = 1e16;
+    bool visited = false;
+    double f_cost(void) const { return h_cost + g_cost; }
+    bool operator==(const Node& rhs) const {
+        return (cell==rhs.cell);
+    }
+};
+
+struct CompareNode {
+    bool operator() (Node* n1, Node* n2) {
+        if(n1->f_cost() == n2->f_cost()) return n1->h_cost > n2->h_cost;
+        return n1->f_cost() > n2->f_cost();
+    }
+};
+
 class ObstacleDistanceGrid;
 
 /**
@@ -86,6 +106,11 @@ struct SearchParams
                                     ///< for cellDistance > minDistanceToObstacle && cellDistance < maxDistanceWithCost
 };
 
+std::vector<Node*> get_neighbors(const Node* node, std::vector<std::vector<Node>> nodes, const ObstacleDistanceGrid& grid, const SearchParams& params);
+
+double get_h_cost(const cell_t node, const cell_t goal);
+
+robot_path_t backtrack_path(const Node* end_node, const ObstacleDistanceGrid& grid);
 
 /**
 * search_for_path uses an A* search to find a path from the start to goal poses. The search assumes a circular robot
