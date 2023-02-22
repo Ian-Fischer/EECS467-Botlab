@@ -4,9 +4,9 @@ shim_pid=$!
 time_pid=$!
 ./bin/motion_controller &
 motion_pid=$!
-#./bin/rplidar_driver &
+./bin/rplidar_driver &
 lidar_pid=$!
-#./bin/slam &
+./bin/slam &
 slam_pid=$!
 
 
