@@ -21,7 +21,7 @@ int main(int argc, char** argv)
     path.path.resize(numTimes * 4);
     
     pose_xyt_t nextPose;
-    float dist = 0.762;
+    float dist = 1;
     
     nextPose.x = dist;//1.0f;
     nextPose.y = 0.0f;//0.0f;
