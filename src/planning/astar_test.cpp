@@ -356,7 +356,7 @@ bool is_valid_path(const robot_path_t& path, double robotRadius, const Occupancy
 
     // Look at each position in the path, along with any intermediate points between the positions to make sure they are
     // far enough from walls in the occupancy grid to be safe
-    std::chrono::milliseconds sleep_duration(200);
+    std::chrono::milliseconds sleep_duration(20);
     for(auto p : path.path)
     {   
         // Displaying animated path while looping over its cells that are being checked
