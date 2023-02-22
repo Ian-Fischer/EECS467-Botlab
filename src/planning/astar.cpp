@@ -36,6 +36,14 @@ double get_h_cost(const cell_t node, const cell_t goal) {
   return (dx + dy) + (1.414 - 2) * std::min(dx, dy);
 }
 
+double get_g_cost(const cell_t cell, const ObstacleDistanceGrid& distances, const SearchParams& params) {
+  double reverse_distance = params.maxDistanceWithCost - distances(cell.x, cell.y);
+  if (reverse_distance > 0)
+    return pow(reverse_distance, params.distanceCostExponent);
+  else
+    return 0.5;
+}
+
 robot_path_t backtrack_path(Node *end_node,
                             const ObstacleDistanceGrid &distances) {
   robot_path_t path;
@@ -67,7 +75,7 @@ robot_path_t search_for_path(pose_xyt_t start, pose_xyt_t goal,
       global_position_to_grid_cell(Point<float>(start.x, start.y), distances);
 
   Point<int> goalCell =
-      global_position_to_grid_cell(Point<float>(start.x, start.y), distances);
+      global_position_to_grid_cell(Point<float>(goal.x, goal.y), distances);
 
   Node startNode(robotCell);
   Node endNode(goalCell);
@@ -83,8 +91,9 @@ robot_path_t search_for_path(pose_xyt_t start, pose_xyt_t goal,
     }
   }
 
-  startNode.g_cost = distances(robotCell.x, robotCell.y);
+  startNode.g_cost = get_g_cost(robotCell, distances, params);
   startNode.h_cost = get_h_cost(robotCell, goalCell);
+  startNode.visited = true;
 
   nodes[robotCell.x][robotCell.y] = startNode;
   pq.push(&nodes[robotCell.x][robotCell.y]);
@@ -95,6 +104,7 @@ robot_path_t search_for_path(pose_xyt_t start, pose_xyt_t goal,
     if (*current_node == endNode) {
       robot_path_t path = backtrack_path(current_node, distances);
       path.utime = start.utime;
+      return path;
     }
 
     std::vector<Node *> neighbors =
@@ -104,12 +114,11 @@ robot_path_t search_for_path(pose_xyt_t start, pose_xyt_t goal,
       // // if neighbor hasnt already been enqueued
       if (!neighbor->visited) {
 
-        // set previous cost
+        // set g cost (cost up to this point)
         cell_t cell = neighbor->cell;
         neighbor->g_cost =
-            current_node->g_cost +
-            (params.maxDistanceWithCost - distances(cell.x, cell.y)) *
-                params.distanceCostExponent;
+            current_node->g_cost + get_g_cost(cell, distances, params);
+            // pow((params.maxDistanceWithCost - distances(cell.x, cell.y)), params.distanceCostExponent);
 
         // set heuristic cost
         neighbor->h_cost = get_h_cost(cell, goalCell);

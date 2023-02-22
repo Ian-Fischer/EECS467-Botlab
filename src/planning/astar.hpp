@@ -110,6 +110,8 @@ std::vector<Node*> get_neighbors(const Node* node, std::vector<std::vector<Node>
 
 double get_h_cost(const cell_t node, const cell_t goal);
 
+double get_g_cost(const cell_t cell, const ObstacleDistanceGrid& distances, const SearchParams& params);
+
 robot_path_t backtrack_path(const Node* end_node, const ObstacleDistanceGrid& grid);
 
 /**
