@@ -106,7 +106,7 @@ struct SearchParams
                                     ///< for cellDistance > minDistanceToObstacle && cellDistance < maxDistanceWithCost
 };
 
-std::vector<Node*> get_neighbors(const Node* node, std::vector<std::vector<Node>> nodes, const ObstacleDistanceGrid& grid, const SearchParams& params);
+std::vector<Node*> get_neighbors(const Node* node, std::vector<std::vector<Node>> &nodes, const ObstacleDistanceGrid& grid, const SearchParams& params);
 
 double get_h_cost(const cell_t node, const cell_t goal);
 
