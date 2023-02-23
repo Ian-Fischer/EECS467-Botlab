@@ -7,6 +7,8 @@ motion_pid=$!
 ./bin/rplidar_driver &
 lidar_pid=$!
 ./bin/slam &
+#--localization-only new_maze.map
+#data/astar/recorded_maze.map &
 slam_pid=$!
 
 
