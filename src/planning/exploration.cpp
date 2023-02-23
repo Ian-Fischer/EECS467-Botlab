@@ -252,6 +252,7 @@ int8_t Exploration::executeExploringMap(bool initialize)
             // if it is, don't do anything
             // if it isn't, break out of this if statment and do the next thing
         // if we don't, pick a frontier, plan a path to it, and set that as our current_path
+    frontiers_ = find_map_frontiers(currentMap_, currentPose_);
     
     if (!frontiers_.empty()) {
         if (currentPath_.path.size() <= 1 || !planner_.isPathSafe(currentPath_)) {
