@@ -21,7 +21,7 @@ int main(int argc, char** argv)
     path.path.resize(numTimes * 4);
     
     pose_xyt_t nextPose;
-    float dist = 0.762;
+    float dist = 1;
     
     nextPose.x = dist;//1.0f;
     nextPose.y = 0.0f;//0.0f;
@@ -56,8 +56,8 @@ int main(int argc, char** argv)
     }
     
     // Return to original heading after completing all circuits
-//    nextPose.theta = 0.0f;
-//    path.path.push_back(nextPose);
+    nextPose.theta = 0.0f;
+    path.path.push_back(nextPose);
     
     nextPose.x = 0.0f;
     nextPose.y = 0.0f;

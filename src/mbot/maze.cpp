@@ -95,6 +95,13 @@ int main(int argc, char** argv)
     nextPose.y = 0.0f;
     nextPose.theta = 0.0f;
     path.path.insert(path.path.begin(), nextPose);
+
+    //for(auto pose : path.path) {
+    for(int i = path.path.size()-1; i >= 0; i--) {
+	auto pose = path.path[i];
+	pose.theta += 3.141592f;
+	path.path.push_back(pose);
+    }
     
     path.path_length = path.path.size();
     
