@@ -1,3 +1,5 @@
+#include "lcmtypes/pose_xyt_t.hpp"
+#include "lcmtypes/robot_path_t.hpp"
 #include <planning/exploration.hpp>
 #include <planning/frontiers.hpp>
 #include <planning/planning_channels.h>
@@ -251,6 +253,14 @@ int8_t Exploration::executeExploringMap(bool initialize)
             // if it isn't, break out of this if statment and do the next thing
         // if we don't, pick a frontier, plan a path to it, and set that as our current_path
     
+    if (!frontiers_.empty()) {
+        if (currentPath_.path.size() <= 1 || !planner_.isPathSafe(currentPath_)) {
+            frontier_t frontier = frontiers_.front();
+            Point<double> goal = frontier.cells.front();
+            pose_xyt_t goal_pose {utime_now(), static_cast<float>(goal.x), static_cast<float>(goal.y), 0};
+            currentPath_ = planner_.planPath(currentPose_, goal_pose);
+        }
+    }
     /////////////////////////////// End student code ///////////////////////////////
     
     /////////////////////////   Create the status message    //////////////////////////
@@ -259,7 +269,7 @@ int8_t Exploration::executeExploringMap(bool initialize)
     status.team_number = teamNumber_;
     status.state = exploration_status_t::STATE_EXPLORING_MAP;
     
-    // If no frontiers remain, then exploration is complete
+    // If no frontiers remainpose, then exploration is complete
     if(frontiers_.empty())
     {
         status.status = exploration_status_t::STATUS_COMPLETE;
@@ -316,9 +326,6 @@ int8_t Exploration::executeReturningHome(bool initialize)
             // if it isn't, go to next step
     // if we dont, plan a path to home and set that as current path
 
-    /////////////////////////////// End student code ///////////////////////////////
-    
-    /////////////////////////   Create the status message    //////////////////////////
     exploration_status_t status;
     status.utime = utime_now();
     status.team_number = teamNumber_;
@@ -326,6 +333,16 @@ int8_t Exploration::executeReturningHome(bool initialize)
     
     double distToHome = distance_between_points(Point<float>(homePose_.x, homePose_.y), 
                                                 Point<float>(currentPose_.x, currentPose_.y));
+
+    if (distToHome <= kReachedPositionThreshold) {
+        if (currentPath_.path.size() <= 1 || !planner_.isPathSafe(currentPath_)) {
+            currentPath_ = planner_.planPath(currentPose_, homePose_);
+        }
+    }
+
+    /////////////////////////////// End student code ///////////////////////////////
+    
+    /////////////////////////   Create the status message    //////////////////////////
     // If we're within the threshold of home, then we're done.
     if(distToHome <= kReachedPositionThreshold)
     {
