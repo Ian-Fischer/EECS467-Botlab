@@ -23,7 +23,7 @@ std::vector<Node *> get_neighbors(const Node *node,
     // only add to neighbors list if cell is in grid bounds and isn't an obstacle
     if (grid.isCellInGrid(adjacent_cell.x, adjacent_cell.y) &&
         (grid(adjacent_cell.x, adjacent_cell.y) >
-         params.minDistanceToObstacle)) {
+         params.minDistanceToObstacle + 0.0001)) {
       neighbors.push_back(&nodes[adjacent_cell.x][adjacent_cell.y]);
     }
   }
@@ -61,7 +61,6 @@ robot_path_t backtrack_path(Node *end_node,
     pose_xyt_t pose;
     pose.x = global_pos.x;
     pose.y = global_pos.y;
-    // TODO: handle theta
     path.path.push_back(pose);
   }
   path.path_length = path.path.size();
@@ -118,7 +117,6 @@ robot_path_t search_for_path(pose_xyt_t start, pose_xyt_t goal,
         cell_t cell = neighbor->cell;
         neighbor->g_cost =
             current_node->g_cost + get_g_cost(cell, distances, params);
-            // pow((params.maxDistanceWithCost - distances(cell.x, cell.y)), params.distanceCostExponent);
 
         // set heuristic cost
         neighbor->h_cost = get_h_cost(cell, goalCell);
