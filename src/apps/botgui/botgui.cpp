@@ -122,9 +122,14 @@ int BotGui::onMouseEvent(vx_layer_t* layer,
         target.y = worldPoint.y;
         target.theta = 0.0f;
         
-        MotionPlanner planner;
+        MotionPlannerParams motion_params;
+        // TODO: why does changing these params affect astar test???
+        // TODO: 
+        SearchParams search_params{0.1, 100, 0.1};
+        MotionPlanner planner(motion_params, search_params);
         planner.setMap(map_);
         robot_path_t plannedPath = planner.planPath(slamPose_, target);
+        std::cout << "path length: " << plannedPath.path_length << std::endl;
         distances_ = planner.obstacleDistances();
         lcmInstance_->publish(CONTROLLER_PATH_CHANNEL, &plannedPath);
         
@@ -224,11 +229,11 @@ void BotGui::render(void)
     vx_buffer_t* distBuf = vx_world_get_buffer(world_, "distances");
     if(gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(showDistancesCheck_)))
     {
-        MotionPlanner planner;
+        MotionPlannerParams params{0.1};
+        MotionPlanner planner(params);
         planner.setMap(map_);
         distances_ = planner.obstacleDistances();
 
-        MotionPlannerParams params;
         draw_distance_grid(distances_,  params.robotRadius, distBuf);
     }
     vx_buffer_swap(distBuf);

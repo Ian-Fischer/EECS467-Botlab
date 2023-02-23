@@ -50,6 +50,7 @@ bool test_narrow_constriction_grid(void);
 bool test_wide_constriction_grid(void);
 bool test_convex_grid(void);
 bool test_maze_grid(void);
+bool test_recorded_maze_grid(void);
 bool test_saved_poses(const std::string& mapFile, const std::string& posesFile, const std::string& testName);
 
 robot_path_t timed_find_path(const pose_xyt_t& start, 
@@ -85,7 +86,7 @@ int main(int argc, char** argv)
     getopt_add_int(gopt, '\0', numRepeatsArg, "1", "Indicates the number of times A* is re-run when evaluating the code's runtime.");
     getopt_add_int(gopt, '\0', pauseTimeArg, "1", "Indicates the time, in seconds, to pause after every test."
                     " Used to facilitate visualization.");
-    getopt_add_int(gopt, '\0', testSelectArg, "6", "Can be set to a value in the interval [0-6]."
+    getopt_add_int(gopt, '\0', testSelectArg, "7", "Can be set to a value in the interval [0-6]."
                     " When set to 6 (default) all tests are run, otherwise the one corresponding test is run: "
                     "test_empty_grid, test_filled_grid, test_narrow_constriction_grid, "
                     "test_wide_constriction_grid, test_convex_grid, test_maze_grid");
@@ -129,9 +130,10 @@ int main(int argc, char** argv)
                                                  test_narrow_constriction_grid,
                                                  test_wide_constriction_grid,
                                                  test_convex_grid,
-                                                 test_maze_grid};
+                                                 test_maze_grid,
+                                                 test_recorded_maze_grid};
     std::vector<test_func> selected_func_vec;
-    if(selected_test != 6)
+    if(selected_test != 7)
     {
 
         selected_func_vec = {tests[selected_test]};
@@ -169,6 +171,10 @@ int main(int argc, char** argv)
     return 0;
 }
 
+bool test_recorded_maze_grid(void)
+{
+    return test_saved_poses("../data/astar/recorded_maze.map", "../data/astar/recorded_maze_poses.txt", __FUNCTION__);
+}
 
 bool test_empty_grid(void)
 {
