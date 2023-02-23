@@ -74,9 +74,8 @@ bool MotionPlanner::isValidGoal(const pose_xyt_t& goal) const
 
 bool MotionPlanner::isPathSafe(const robot_path_t& path) const
 {
-
-    ///////////// TODO: Implement your test for a safe path here //////////////////
-
+    for (auto pose : path.path)
+        if (!isValidGoal(pose)) return false;
     return true;
 }
 

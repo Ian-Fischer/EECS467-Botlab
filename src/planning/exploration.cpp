@@ -243,6 +243,13 @@ int8_t Exploration::executeExploringMap(bool initialize)
     *           explored more of the map.
     *       -- You will likely be able to see the frontier before actually reaching the end of the path leading to it.
     */
+
+    // if there are frontiers left to explore:
+    // check if we have a valid current path
+        // if we do, check if it's still valid given any new map data (only do this if we have a new map?)
+            // if it is, don't do anything
+            // if it isn't, break out of this if statment and do the next thing
+        // if we don't, pick a frontier, plan a path to it, and set that as our current_path
     
     /////////////////////////////// End student code ///////////////////////////////
     
@@ -302,7 +309,12 @@ int8_t Exploration::executeReturningHome(bool initialize)
     *       (2) currentPath_.path_length > 1  :  currently following a path to the home pose
     */
     
-
+    // if we haven't reached home yet:
+    // if we have a valid path:
+        // check if its still a valid path (is this necessary? are we still updating the map?)
+            // if it is, do nothing
+            // if it isn't, go to next step
+    // if we dont, plan a path to home and set that as current path
 
     /////////////////////////////// End student code ///////////////////////////////
     
