@@ -189,9 +189,9 @@ void Exploration::executeStateMachine(void)
 
         std::cout << "timestamp: " << currentPath_.utime << "\n";
 
-        for(auto pose : currentPath_.path){
-            std::cout << "(" << pose.x << "," << pose.y << "," << pose.theta << "); ";
-        }std::cout << "\n";
+        // for(auto pose : currentPath_.path){
+        //     std::cout << "(" << pose.x << "," << pose.y << "," << pose.theta << "); ";
+        // }std::cout << "\n";
 
         lcmInstance_->publish(CONTROLLER_PATH_CHANNEL, &currentPath_);
     }
@@ -204,9 +204,9 @@ void Exploration::executeStateMachine(void)
 
         std::cout << "path timestamp: " << currentPath_.utime << "\npath: ";
 
-        for(auto pose : currentPath_.path){
-            std::cout << "(" << pose.x << "," << pose.y << "," << pose.theta << "); ";
-        }std::cout << "\n";
+        // for(auto pose : currentPath_.path){
+        //     std::cout << "(" << pose.x << "," << pose.y << "," << pose.theta << "); ";
+        // }std::cout << "\n";
 
         lcmInstance_->publish(CONTROLLER_PATH_CHANNEL, &currentPath_);
 
@@ -270,7 +270,7 @@ int8_t Exploration::executeExploringMap(bool initialize)
         ) : std::numeric_limits<float>::max();
 
     if( !frontiers_.empty() && 
-        (initialize || !planner_.isPathSafe(currentPath_ ) || goalDist < 3*currentMap_.metersPerCell())
+        (initialize || !planner_.isPathSafe(currentPath_ ) || goalDist < 2*currentMap_.metersPerCell())
     ) {
         currentPath_.path_length = 1;
         int cell_idx = 0;
@@ -305,13 +305,14 @@ int8_t Exploration::executeExploringMap(bool initialize)
         status.status = exploration_status_t::STATUS_COMPLETE;
     }
     // Else if there's a path to follow, then we're still in the process of exploring
-    else if(currentPath_.path.size() > 1)
+    else if(currentPath_.path_length > 1)
     {
         status.status = exploration_status_t::STATUS_IN_PROGRESS;
     }
     // Otherwise, there are frontiers, but no valid path exists, so exploration has failed
     else
     {
+        std::cout << "num frontiers: " << frontiers_.size() << ", path length: " << currentPath_.path_length << std::endl;
         status.status = exploration_status_t::STATUS_FAILED;
     }
     
