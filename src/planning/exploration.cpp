@@ -3,6 +3,7 @@
 #include "lcmtypes/pose_xyt_t.hpp"
 #include "lcmtypes/robot_path_t.hpp"
 #include <bits/stdint-intn.h>
+#include <iterator>
 #include <limits>
 #include <planning/exploration.hpp>
 #include <planning/frontiers.hpp>
@@ -270,7 +271,7 @@ int8_t Exploration::executeExploringMap(bool initialize)
         ) : std::numeric_limits<float>::max();
 
     if( !frontiers_.empty() && 
-        (initialize || !planner_.isPathSafe(currentPath_ ) || goalDist < 2*currentMap_.metersPerCell())
+        (initialize || !planner_.isPathSafe(currentPath_ ) || goalDist < 2*currentMap_.metersPerCell() || currentPath_.path_length <= 1)
     ) {
         currentPath_.path_length = 1;
         int cell_idx = 0;
