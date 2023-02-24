@@ -278,7 +278,7 @@ int8_t Exploration::executeExploringMap(bool initialize)
             frontier_t frontier = frontiers_[frontier_idx];
             if(cell_idx >= frontier.cells.size()) {
                 frontier_idx++;
-                if (frontier_idx > frontiers_.size()) {
+                if (frontier_idx >= frontiers_.size()) {
                     std::cout << "[BAD ERROR] couldn't find a valid plan to the frontier" << std::endl;
                     break;
                 }
