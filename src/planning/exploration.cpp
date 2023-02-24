@@ -1,4 +1,5 @@
 #include "common/point.hpp"
+#include "lcmtypes/exploration_status_t.hpp"
 #include "lcmtypes/pose_xyt_t.hpp"
 #include "lcmtypes/robot_path_t.hpp"
 #include <bits/stdint-intn.h>
@@ -280,7 +281,8 @@ int8_t Exploration::executeExploringMap(bool initialize)
                 frontier_idx++;
                 if (frontier_idx >= frontiers_.size()) {
                     std::cout << "[BAD ERROR] couldn't find a valid plan to the frontier" << std::endl;
-                    break;
+                    return exploration_status_t::STATE_EXPLORING_MAP;
+                    // break;
                 }
             }
             Point<double> goal = frontier.cells[cell_idx++];
