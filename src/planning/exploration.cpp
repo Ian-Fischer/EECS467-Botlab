@@ -1,5 +1,8 @@
+#include "common/point.hpp"
 #include "lcmtypes/pose_xyt_t.hpp"
 #include "lcmtypes/robot_path_t.hpp"
+#include <bits/stdint-intn.h>
+#include <limits>
 #include <planning/exploration.hpp>
 #include <planning/frontiers.hpp>
 #include <planning/planning_channels.h>
@@ -252,10 +255,22 @@ int8_t Exploration::executeExploringMap(bool initialize)
             // if it is, don't do anything
             // if it isn't, break out of this if statment and do the next thing
         // if we don't, pick a frontier, plan a path to it, and set that as our current_path
+    if(initialize) {
+        currentPath_.path_length = 0;
+    }
+
+
     frontiers_ = find_map_frontiers(currentMap_, currentPose_);
     planner_.setMap(currentMap_);
 
-    if( !frontiers_.empty() && (initialize || (!planner_.isPathSafe(currentPath_))) ) {
+    float goalDist = (currentPath_.path_length > 1) ? distance_between_points(
+        Point<float>(currentPose_.x, currentPose_.y), 
+        Point<float>(currentPath_.path.back().x, currentPath_.path.back().y)
+        ) : std::numeric_limits<float>::max();
+
+    if( !frontiers_.empty() && 
+        (initialize || !planner_.isPathSafe(currentPath_ ) || goalDist < 5*currentMap_.metersPerCell())
+    ) {
         currentPath_.path_length = 1;
         int i = 0;
         do {
