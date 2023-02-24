@@ -253,6 +253,7 @@ int8_t Exploration::executeExploringMap(bool initialize)
             // if it isn't, break out of this if statment and do the next thing
         // if we don't, pick a frontier, plan a path to it, and set that as our current_path
     frontiers_ = find_map_frontiers(currentMap_, currentPose_);
+    planner_.setMap(currentMap_);
 
     if( !frontiers_.empty() && (initialize || (!planner_.isPathSafe(currentPath_))) ) {
         currentPath_.path_length = 1;
@@ -266,7 +267,7 @@ int8_t Exploration::executeExploringMap(bool initialize)
             Point<double> goal = frontier.cells[i++];
             pose_xyt_t goal_pose {utime_now(), static_cast<float>(goal.x), static_cast<float>(goal.y), 0};
             currentPath_ = planner_.planPath(currentPose_, goal_pose);
-        } while(currentPath_.path.size() <= 1);
+        } while(currentPath_.path_length <= 1);
     }
     
     /////////////////////////////// End student code ///////////////////////////////
