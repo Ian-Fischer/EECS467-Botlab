@@ -269,17 +269,21 @@ int8_t Exploration::executeExploringMap(bool initialize)
         ) : std::numeric_limits<float>::max();
 
     if( !frontiers_.empty() && 
-        (initialize || !planner_.isPathSafe(currentPath_ ) || goalDist < 5*currentMap_.metersPerCell())
+        (initialize || !planner_.isPathSafe(currentPath_ ) || goalDist < 3*currentMap_.metersPerCell())
     ) {
         currentPath_.path_length = 1;
-        int i = 0;
+        int cell_idx = 0;
+        int frontier_idx = 0;
         do {
-            frontier_t frontier = frontiers_.front();
-            if(i >= frontier.cells.size()) {
-                std::cout << "[BAD ERROR] couldn't find a valid plan to the frontier" << std::endl;
-                break;
+            frontier_t frontier = frontiers_[frontier_idx];
+            if(cell_idx >= frontier.cells.size()) {
+                frontier_idx++;
+                if (frontier_idx > frontiers_.size()) {
+                    std::cout << "[BAD ERROR] couldn't find a valid plan to the frontier" << std::endl;
+                    break;
+                }
             }
-            Point<double> goal = frontier.cells[i++];
+            Point<double> goal = frontier.cells[cell_idx++];
             pose_xyt_t goal_pose {utime_now(), static_cast<float>(goal.x), static_cast<float>(goal.y), 0};
             currentPath_ = planner_.planPath(currentPose_, goal_pose);
         } while(currentPath_.path_length <= 1);
