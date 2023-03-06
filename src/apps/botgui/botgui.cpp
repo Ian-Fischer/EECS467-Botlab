@@ -123,6 +123,7 @@ int BotGui::onMouseEvent(vx_layer_t* layer,
         target.theta = 0.0f;
         
         MotionPlannerParams motion_params;
+        motion_params.robotRadius = 0.2;
         // TODO: why does changing these params affect astar test???
         // TODO: 
         SearchParams search_params{0.15, 100, 0.1};
@@ -229,7 +230,7 @@ void BotGui::render(void)
     vx_buffer_t* distBuf = vx_world_get_buffer(world_, "distances");
     if(gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(showDistancesCheck_)))
     {
-        MotionPlannerParams params{0.1};
+        MotionPlannerParams params;
         MotionPlanner planner(params);
         planner.setMap(map_);
         distances_ = planner.obstacleDistances();
