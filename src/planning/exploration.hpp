@@ -83,7 +83,7 @@ private:
     OccupancyGrid currentMap_;          // Map to use for finding frontiers and planning paths to them
 
     MotionPlannerParams motion_params;
-    SearchParams search_params{0.1, 100, 0.1};
+    SearchParams search_params{0.15, 100, 0.1};
     MotionPlanner planner_;             // Planner to use for finding collision-free paths to select frontiers
     
     pose_xyt_t homePose_;               // Pose of the robot when it is home, i.e. the initial pose before exploration begins

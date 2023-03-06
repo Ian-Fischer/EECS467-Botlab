@@ -125,7 +125,7 @@ int BotGui::onMouseEvent(vx_layer_t* layer,
         MotionPlannerParams motion_params;
         // TODO: why does changing these params affect astar test???
         // TODO: 
-        SearchParams search_params{0.1, 100, 0.1};
+        SearchParams search_params{0.15, 100, 0.1};
         MotionPlanner planner(motion_params, search_params);
         planner.setMap(map_);
         robot_path_t plannedPath = planner.planPath(slamPose_, target);
