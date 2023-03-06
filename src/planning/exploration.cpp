@@ -36,6 +36,7 @@ Exploration::Exploration(int32_t teamNumber,
 , haveHomePose_(false)
 , lcmInstance_(lcmInstance)
 , pathReceived_(false)
+, planner_(motion_params, search_params)
 {
     assert(lcmInstance_);   // confirm a nullptr wasn't passed in
     
@@ -52,10 +53,12 @@ Exploration::Exploration(int32_t teamNumber,
     status.status = exploration_status_t::STATUS_IN_PROGRESS;
     
     lcmInstance_->publish(EXPLORATION_STATUS_CHANNEL, &status);
-    
+
+    /*
     MotionPlannerParams params;
     params.robotRadius = 0.2;
     planner_.setParams(params);
+    */
 }
 
 
