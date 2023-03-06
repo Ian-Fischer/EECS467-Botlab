@@ -19,28 +19,30 @@ int main(int argc, char** argv)
     
     robot_path_t path;
     path.path.resize(numTimes * 4);
+
+    int neg = -1;
     
     pose_xyt_t nextPose;
     float dist = 1;
     
     nextPose.x = dist;//1.0f;
     nextPose.y = 0.0f;//0.0f;
-    nextPose.theta = M_PI_2;
+    nextPose.theta = M_PI_2 * neg;
     for(int n = 0; n < numTimes; ++n)
     {
         path.path[4*n] = nextPose;
     }
     
     nextPose.x = dist;
-    nextPose.y = dist;
-    nextPose.theta = 0;
+    nextPose.y = dist*neg;
+    nextPose.theta = M_PI;//0;
     for(int n = 0; n < numTimes; ++n)
     {
         path.path[4*n + 1] = nextPose;
     }
     
     nextPose.x = 0.0f;
-    nextPose.y = dist;
+    nextPose.y = dist*neg;
     nextPose.theta = -M_PI;
     for(int n = 0; n < numTimes; ++n)
     {
@@ -49,7 +51,7 @@ int main(int argc, char** argv)
     
     nextPose.x = 0.0f;
     nextPose.y = 0.0f;
-    nextPose.theta = -M_PI_2;
+    nextPose.theta = -M_PI_2*neg;
     for(int n = 0; n < numTimes; ++n)
     {
         path.path[4*n + 3] = nextPose;
