@@ -123,7 +123,6 @@ int BotGui::onMouseEvent(vx_layer_t* layer,
         target.theta = 0.0f;
         
         MotionPlannerParams motion_params;
-        motion_params.robotRadius = 0.2;
         // TODO: why does changing these params affect astar test???
         // TODO: 
         SearchParams search_params{0.15, 100, 0.1};
