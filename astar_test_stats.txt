@@ -1,0 +1,140 @@
+
+======================================================================
+Testing your A* with the following settings :
+Displaying to a botlab gui : false
+Displaying path animation : false
+Number of repeats : 1
+Pause time in [s] : 1
+Working on test case : 7
+Call the binary with --help argument passed for options
+======================================================================
+
+STARTING: test_empty_grid
+INFO: path rejected due to invalid goal
+Incorrectly found no path between start and goal: (-5,0,0) -> (5,0,0)
+INFO: path rejected due to invalid goal
+Incorrectly found no path between start and goal: (0,-5,0) -> (0,5,0)
+INFO: path rejected due to invalid goal
+Correctly found no path between start and goal: (-20,0,0) -> (0,0,0)
+INFO: path rejected due to invalid goal
+Correctly found no path between start and goal: (0,0,0) -> (0,20,0)
+INFO: path rejected due to invalid goal
+Incorrectly found no path between start and goal: (-5,-5,0) -> (5,5,0)
+FAILED! test_empty_grid
+
+STARTING: test_filled_grid
+INFO: path rejected due to invalid goal
+Correctly found no path between start and goal: (-5,0,0) -> (5,0,0)
+INFO: path rejected due to invalid goal
+Correctly found no path between start and goal: (0,-5,0) -> (0,5,0)
+INFO: path rejected due to invalid goal
+Correctly found no path between start and goal: (-15,0,0) -> (0,0,0)
+INFO: path rejected due to invalid goal
+Correctly found no path between start and goal: (-15,0,0) -> (0,15,0)
+INFO: path rejected due to invalid goal
+Correctly found no path between start and goal: (-5,-5,0) -> (5,5,0)
+PASSED! test_filled_grid
+
+STARTING: test_narrow_constriction_grid
+Correctly found path between start and goal: (-5,5,0) -> (5,5,0)
+Correctly found path between start and goal: (-5,-2,0) -> (5,-3,0)
+testCorrectly found no path between start and goal: (0,-5,0) -> (0,5,0)
+INFO: path rejected due to invalid goal
+Correctly found no path between start and goal: (-5,-1,0) -> (-5,0.05,0)
+Correctly found no path between start and goal: (-7.45,0,0) -> (-5,0.5,0)
+PASSED! test_narrow_constriction_grid
+
+STARTING: test_wide_constriction_grid
+Correctly found path between start and goal: (-5,5,0) -> (5,5,0)
+Correctly found path between start and goal: (-5,-2,0) -> (5,-3,0)
+Correctly found path between start and goal: (0,-5,0) -> (0,5,0)
+INFO: path rejected due to invalid goal
+Correctly found no path between start and goal: (-5,-1,0) -> (-5,-0.05,0)
+PASSED! test_wide_constriction_grid
+
+STARTING: test_convex_grid
+Correctly found path between start and goal: (0,0,0) -> (0,1,0)
+Correctly found no path between start and goal: (0,0,0) -> (0,3,0)
+Incorrectly found valid path between start and goal: (0.5,0,0) -> (0,0,0)
+testCorrectly found no path between start and goal: (3,0,0) -> (0,0,0)
+FAILED! test_convex_grid
+
+STARTING: test_maze_grid
+Correctly found path between start and goal: (0,0,0) -> (-1.4,1.9,0)
+Correctly found path between start and goal: (-1.4,1.9,0) -> (-0.28,0.62,0)
+Correctly found path between start and goal: (-0.28,0.62,0) -> (-0.92,0.74,0)
+Correctly found path between start and goal: (-0.92,0.74,0) -> (-0.92,0.34,0)
+PASSED! test_maze_grid
+
+STARTING: test_recorded_maze_grid
+Correctly found path between start and goal: (2.95,-0.1,0) -> (2.43,-0.16,0)
+Correctly found path between start and goal: (2.95,-0.1,0) -> (1.83,-0.66,0)
+Correctly found path between start and goal: (2.95,-0.1,0) -> (0,0,0)
+PASSED! test_recorded_maze_grid
+
+Timing information for successful planning attempts:
+test_convex_grid :: (us)
+	Min :    478
+	Mean:    906.5
+	Max:     1335
+	Median:  0
+	Std dev: 428.5
+test_maze_grid :: (us)
+	Min :    479
+	Mean:    1308.75
+	Max:     1777
+	Median:  1506
+	Std dev: 493.363
+test_narrow_constriction_grid :: (us)
+	Min :    1351
+	Mean:    1959.5
+	Max:     2568
+	Median:  0
+	Std dev: 608.5
+test_recorded_maze_grid :: (us)
+	Min :    573
+	Mean:    692.667
+	Max:     848
+	Median:  848
+	Std dev: 115.066
+test_wide_constriction_grid :: (us)
+	Min :    1111
+	Mean:    2184.67
+	Max:     2783
+	Median:  2783
+	Std dev: 760.856
+
+Timing information for failed planning attempts:
+test_convex_grid :: (us)
+	Min :    1974
+	Mean:    9871
+	Max:     17768
+	Median:  0
+	Std dev: 7897
+test_empty_grid :: (us)
+	Min :    2
+	Mean:    5.6
+	Max:     12
+	Median:  5
+	Std dev: 3.38231
+test_filled_grid :: (us)
+	Min :    1
+	Mean:    3.6
+	Max:     5
+	Median:  4
+	Std dev: 1.35647
+test_narrow_constriction_grid :: (us)
+	Min :    5
+	Mean:    5229
+	Max:     12886
+	Median:  2796
+	Std dev: 5532.91
+test_wide_constriction_grid :: (us)
+	Min :    14
+	Mean:    14
+	Max:     14
+	Median:  0
+	Std dev: 0
+
+
+INCOMPLETE: Passed 5 of 7 tests. Keep debugging and testing!
