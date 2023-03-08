@@ -9,7 +9,7 @@ LIBPLANNING_OBJS = \
 	motion_planner.o \
 	obstacle_distance_grid.o \
 	astar.o \
-	frontiers.o
+	frontiers.o \
 
 $(LIB_PLANNING): $(LIBPLANNING_OBJS) $(LIBDEPS)
 	@echo "    $@"
@@ -19,8 +19,9 @@ BIN_DIST_TEST  = $(BIN_PATH)/obstacle_distance_grid_test
 BIN_ASTAR_TEST = $(BIN_PATH)/astar_test
 BIN_GRID_GENERATOR = $(BIN_PATH)/grid_generator
 BIN_EXPLORATION = $(BIN_PATH)/exploration
+BIN_RUN_ASTAR = $(BIN_PATH)/run_astar
 
-ALL = $(BIN_DIST_TEST) $(BIN_ASTAR_TEST) $(BIN_GRID_GENERATOR) $(BIN_EXPLORATION) $(LIB_PLANNING)
+ALL = $(BIN_DIST_TEST) $(BIN_ASTAR_TEST) $(BIN_GRID_GENERATOR) $(BIN_EXPLORATION) $(LIB_PLANNING) $(BIN_RUN_ASTAR)
 
 all: $(ALL)
 
@@ -29,6 +30,10 @@ $(BIN_DIST_TEST): obstacle_distance_grid_test.o $(LIBDEPS) $(LIB_PLANNING)
 	@$(CXX) -o $@ $^ $(LIB_PLANNING) $(LDFLAGS) $(CXXFLAGS)
 
 $(BIN_ASTAR_TEST): astar_test.o $(LIBDEPS) $(LIB_PLANNING)
+	@echo "    $@"
+	@$(CXX) -o $@ $^ $(LIB_PLANNING) $(CXXFLAGS) $(LDFLAGS)
+
+$(BIN_RUN_ASTAR): run_astar.cpp $(LIBDEPS) $(LIB_PLANNING)
 	@echo "    $@"
 	@$(CXX) -o $@ $^ $(LIB_PLANNING) $(CXXFLAGS) $(LDFLAGS)
 
