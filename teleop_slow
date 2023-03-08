@@ -1,0 +1,18 @@
+./bin/shim &
+shim_pid=$!
+./bin/timesync &
+time_pid=$!
+./bin/rplidar_driver &
+lidar_pid=$!
+./bin/slam  &
+#--localization-only new_maze.map
+#data/astar/recorded_maze.map &
+slam_pid=$!
+
+read h
+
+
+kill $shim_pid
+kill $time_pid
+kill $lidar_pid
+kill $slam_pid

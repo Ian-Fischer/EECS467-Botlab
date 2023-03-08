@@ -12,6 +12,8 @@
 #include <lcmtypes/lidar_t.hpp>
 #include <planning/frontiers.hpp>
 #include <planning/obstacle_distance_grid.hpp>
+#include <planning/astar.hpp>
+#include <planning/motion_planner.hpp>
 #include <vx/vx_display.h>
 #include <gtk/gtk.h>
 #include <lcm/lcm-cpp.hpp>
@@ -128,6 +130,9 @@ private:
     
     lcm::LCM* lcmInstance_;                         // Instance of LCM to use for communication
     std::mutex vxLock_;                             // Mutex for incoming data -- LCM runs on different thread than GTK+
+
+    SearchParams search_params_;
+    MotionPlannerParams motion_params_;
     
     // Additional helpers
     void addPose(const pose_xyt_t& pose, const std::string& channel);
