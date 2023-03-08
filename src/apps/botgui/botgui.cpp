@@ -230,7 +230,9 @@ void BotGui::render(void)
     vx_buffer_t* distBuf = vx_world_get_buffer(world_, "distances");
     if(gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(showDistancesCheck_)))
     {
-        MotionPlanner planner(motion_params_, search_params_);
+        // MotionPlanner planner(motion_params_, search_params_);
+        MotionPlannerParams motion_params;
+        MotionPlanner planner(motion_params);
         planner.setMap(map_);
         distances_ = planner.obstacleDistances();
 
