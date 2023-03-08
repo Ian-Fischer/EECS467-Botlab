@@ -1,0 +1,25 @@
+./bin/shim &
+shim_pid=$!
+./bin/timesync &
+time_pid=$!
+./bin/motion_controller &
+motion_pid=$!
+./bin/rplidar_driver &
+lidar_pid=$!
+./bin/slam --localization-only competition_map.map &
+#data/astar/recorded_maze.map &
+slam_pid=$!
+
+
+#log_name=logs/$(date +'%d_%H-%M-%S')
+#lcm-logger $log_name &
+#lcm_pid=$!
+
+read h
+
+kill $shim_pid
+kill $time_pid
+kill $motion_pid
+kill $lcm_pid
+kill $lidar_pid
+kill $slam_pid
